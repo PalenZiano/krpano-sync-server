@@ -161,7 +161,7 @@ io.on('connection', (socket) => {
 });
 
 // Iniciar servidor
-http.listen(PORT, () => {
+http.listen(PORT, '0.0.0.0', () => {
   console.log('\n' + '='.repeat(50));
   console.log('🚀 SERVIDOR DE SINCRONIZACIÓN KRPANO INICIADO');
   console.log('='.repeat(50));
