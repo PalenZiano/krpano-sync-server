@@ -638,12 +638,14 @@
             currentTime = 0;
             document.getElementById('seekBar').value = 0;
             document.getElementById('seekValue').textContent = '0:00';
-            socket.emit('admin-pause', { time: 0 });
-            socket.emit('admin-seek', { time: 0 });
+            
+            // Usar el comando específico de reinicio
+            socket.emit('admin-restart');
+            
             isPlaying = false;
-            updatePlayPauseButton();
-            updateVideoState('Reiniciado');
-            addLog('Video reiniciado y pausado en 0:00', 'success');
+            updatePlayPauseButton(false);
+            updateVideoState('Pausado en 0:00');
+            addLog('🔄 Video reiniciado y pausado en 0:00', 'success');
         }
         
         function seekVideo() {

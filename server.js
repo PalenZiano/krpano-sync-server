@@ -123,10 +123,10 @@ io.on('connection', (socket) => {
     console.log(`⏩ SEEK a ${data.time.toFixed(2)}s`);
   });
   
-  // Comando: Reiniciar video
+  // Comando: Reiniciar video (PAUSAR en segundo 0)
   socket.on('admin-restart', () => {
     videoState = {
-      playing: true,
+      playing: false,  // PAUSADO
       time: 0,
       timestamp: Date.now(),
       scene: 'videopano'
@@ -134,7 +134,7 @@ io.on('connection', (socket) => {
     
     io.emit('video-restart', videoState);
     
-    console.log(`🔄 RESTART - Video reiniciado`);
+    console.log(`🔄 RESTART - Video pausado en segundo 0`);
   });
   
   // Comando: Volver a la escena inicial (poster)
