@@ -23,8 +23,8 @@ let videoState = {
   scene: 'posterscene'  // Escena actual
 };
 
-// Contador de clientes conectados
-let connectedClients = 0;
+// Información detallada de clientes conectados
+let connectedClients = new Map();
 
 // Servir archivos estáticos (para el panel de admin)
 app.use(express.static('public'));
@@ -34,7 +34,7 @@ app.get('/', (req, res) => {
   res.send(`
     <h1>Servidor de Sincronización Krpano</h1>
     <p>Servidor funcionando correctamente</p>
-    <p>Clientes conectados: ${connectedClients}</p>
+    <p>Clientes conectados: ${connectedClients.size}</p>
     <p>Estado actual: ${videoState.playing ? 'Reproduciendo' : 'Pausado'}</p>
     <p>Tiempo: ${videoState.time.toFixed(2)}s</p>
     <br>
@@ -44,15 +44,36 @@ app.get('/', (req, res) => {
 
 // Gestión de conexiones Socket.IO
 io.on('connection', (socket) => {
-  connectedClients++;
+  // Registrar nuevo cliente con información detallada
+  const clientInfo = {
+    id: socket.id,
+    connected: true,
+    sceneReady: false,
+    synced: false,
+    connectedAt: new Date().toISOString(),
+    ip: socket.handshake.address
+  };
+  
+  connectedClients.set(socket.id, clientInfo);
+  
   console.log(`✅ Cliente conectado: ${socket.id}`);
-  console.log(`📊 Total de clientes: ${connectedClients}`);
+  console.log(`📊 Total de clientes: ${connectedClients.size}`);
   
   // Enviar estado actual al nuevo cliente inmediatamente
   socket.emit('sync-state', videoState);
   
-  // Notificar a todos sobre el número de clientes
-  io.emit('client-count', { count: connectedClients });
+  // Marcar cliente como sincronizado después de recibir estado
+  setTimeout(() => {
+    const client = connectedClients.get(socket.id);
+    if (client) {
+      client.synced = true;
+      connectedClients.set(socket.id, client);
+      broadcastClientList();
+    }
+  }, 1000);
+  
+  // Enviar lista de clientes a todos
+  broadcastClientList();
   
   // ============================================
   // COMANDOS DEL ADMINISTRADOR
@@ -146,19 +167,39 @@ io.on('connection', (socket) => {
     // console.log(`Cliente ${socket.id} reporta: ${data.time}s`);
   });
   
+  // Cliente reporta que la escena está lista
+  socket.on('client-scene-ready', (data) => {
+    const client = connectedClients.get(socket.id);
+    if (client) {
+      client.sceneReady = data.sceneReady;
+      connectedClients.set(socket.id, client);
+      console.log(`📹 Cliente ${socket.id.substring(0,8)}... escena lista`);
+      broadcastClientList();
+    }
+  });
+  
   // ============================================
   // DESCONEXIÓN
   // ============================================
   
   socket.on('disconnect', () => {
-    connectedClients--;
+    connectedClients.delete(socket.id);
     console.log(`❌ Cliente desconectado: ${socket.id}`);
-    console.log(`📊 Total de clientes: ${connectedClients}`);
+    console.log(`📊 Total de clientes: ${connectedClients.size}`);
     
-    // Notificar a todos sobre el número de clientes
-    io.emit('client-count', { count: connectedClients });
+    // Notificar a todos sobre la lista actualizada de clientes
+    broadcastClientList();
   });
 });
+
+// Función para enviar lista de clientes a todos
+function broadcastClientList() {
+  const clientsArray = Array.from(connectedClients.values());
+  io.emit('clients-list', { 
+    count: connectedClients.size,
+    clients: clientsArray
+  });
+}
 
 // Iniciar servidor
 http.listen(PORT, '0.0.0.0', () => {
@@ -179,4 +220,5 @@ process.on('SIGINT', () => {
   console.log('\n👋 Cerrando servidor...');
   process.exit(0);
 });
+
 
