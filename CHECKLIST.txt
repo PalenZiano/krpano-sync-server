@@ -1,0 +1,216 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║                        ✅ CHECKLIST DE DESPLIEGUE                            ║
+║                         Railway.app + Hostinger                              ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+📝 Marca cada paso al completarlo
+═══════════════════════════════════════════════════════════════════════════════
+
+
+FASE 1: PREPARACIÓN
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] 1. Verificar que la carpeta "github" contiene todos los archivos:
+    [ ] server.js
+    [ ] package.json
+    [ ] .gitignore
+    [ ] README.md
+    [ ] INSTRUCCIONES_RAILWAY.md
+    [ ] LEEME_PRIMERO.txt
+    [ ] public/admin.html
+
+
+FASE 2: SUBIR A GITHUB
+═══════════════════════════════════════════════════════════════════════════════
+
+Opción A: GitHub Desktop (Recomendado)
+[ ] 2. Descargar GitHub Desktop (https://desktop.github.com/)
+[ ] 3. Instalar y abrir GitHub Desktop
+[ ] 4. Iniciar sesión con GitHub (o crear cuenta)
+[ ] 5. File → Add Local Repository → Seleccionar carpeta "github"
+[ ] 6. Escribir "Initial commit" en el campo Summary
+[ ] 7. Click en "Commit to main"
+[ ] 8. Click en "Publish repository"
+[ ] 9. Nombre: "krpano-sync-server"
+[ ] 10. Click en "Publish repository"
+[ ] 11. ✅ Verificar en GitHub.com que el repositorio existe
+
+Opción B: Terminal
+[ ] 2. Abrir PowerShell
+[ ] 3. cd a la carpeta "github"
+[ ] 4. git init
+[ ] 5. git config --global user.name "Tu Nombre"
+[ ] 6. git config --global user.email "tu@email.com"
+[ ] 7. git add .
+[ ] 8. git commit -m "Initial commit"
+[ ] 9. Crear repositorio en GitHub.com/new
+[ ] 10. git remote add origin https://github.com/TU-USUARIO/krpano-sync-server.git
+[ ] 11. git branch -M main
+[ ] 12. git push -u origin main
+[ ] 13. ✅ Verificar en GitHub.com que los archivos están subidos
+
+
+FASE 3: DESPLEGAR EN RAILWAY
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] 14. Ir a https://railway.app/
+[ ] 15. Click en "Login"
+[ ] 16. Login with GitHub
+[ ] 17. Autorizar Railway
+[ ] 18. Click en "New Project"
+[ ] 19. Click en "Deploy from GitHub repo"
+[ ] 20. Seleccionar "krpano-sync-server"
+[ ] 21. Esperar el despliegue (2-3 minutos)
+[ ] 22. Verificar que aparezca ✅ (deployment exitoso)
+[ ] 23. Click en "Settings"
+[ ] 24. Scroll hasta "Networking"
+[ ] 25. Click en "Generate Domain"
+[ ] 26. Copiar la URL generada (ej: https://krpano-sync-production.up.railway.app)
+[ ] 27. ✅ Probar URL en navegador (debe mostrar "Servidor de Sincronización Krpano")
+
+URL de mi servidor Railway:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                                                             │
+│  https://_________________________________________________.up.railway.app   │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+FASE 4: ACTUALIZAR TOUR.HTML
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] 28. Abrir el archivo "tour.html" (el original del proyecto Krpano)
+[ ] 29. Buscar la línea 98 (aproximadamente)
+[ ] 30. Encontrar: const SERVER_URL = 'http://localhost:3000';
+[ ] 31. Cambiar por: const SERVER_URL = 'TU-URL-DE-RAILWAY';
+[ ] 32. Verificar que incluya https:// al inicio
+[ ] 33. Guardar el archivo
+[ ] 34. ✅ Verificar que el cambio se guardó correctamente
+
+
+FASE 5: SUBIR A HOSTINGER
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] 35. Acceder al panel de Hostinger
+[ ] 36. Ir a File Manager (Administrador de archivos)
+[ ] 37. Navegar a "public_html/"
+
+Subir archivos principales:
+[ ] 38. Subir tour.html (el modificado)
+[ ] 39. Subir krpano.xml
+[ ] 40. Subir krpano.js
+
+Subir carpetas:
+[ ] 41. Subir carpeta "video/" completa
+[ ] 42. Subir carpeta "plugins/" completa
+[ ] 43. Subir carpeta "skin/" completa
+
+Panel de administración:
+[ ] 44. Dentro de "public_html/", crear carpeta "admin"
+[ ] 45. Entrar a la carpeta "admin"
+[ ] 46. Subir el archivo "admin.html" (de github/public/)
+[ ] 47. ✅ Verificar que los archivos estén en su lugar
+
+
+FASE 6: PRUEBAS
+═══════════════════════════════════════════════════════════════════════════════
+
+Prueba 1: Servidor Railway
+[ ] 48. Abrir: https://TU-URL.up.railway.app
+[ ] 49. ✅ Debe mostrar "Servidor de Sincronización Krpano"
+[ ] 50. ✅ Debe decir "Servidor funcionando correctamente"
+
+Prueba 2: Panel de Administración
+[ ] 51. Abrir: https://tu-dominio.com/admin/admin.html
+[ ] 52. ✅ El panel debe cargar correctamente
+[ ] 53. ✅ Indicador debe estar VERDE "🟢 Conectado"
+[ ] 54. ✅ Debe mostrar "Clientes conectados: 0"
+
+Prueba 3: Cliente (Tour)
+[ ] 55. Abrir: https://tu-dominio.com/tour.html
+[ ] 56. ✅ El tour debe cargar correctamente
+[ ] 57. ✅ Indicador verde "Sincronizado" en esquina superior derecha
+
+Prueba 4: Sincronización
+[ ] 58. Abrir panel admin en una pestaña
+[ ] 59. Abrir tour.html en otra pestaña
+[ ] 60. En el panel admin, click en "▶️ Reproducir"
+[ ] 61. ✅ El video debe iniciar AUTOMÁTICAMENTE en la otra pestaña
+[ ] 62. Probar "⏸️ Pausar" en el panel admin
+[ ] 63. ✅ El video debe pausarse en la otra pestaña
+[ ] 64. Probar "🔄 Reiniciar"
+[ ] 65. ✅ El video debe reiniciarse en la otra pestaña
+
+Prueba 5: Múltiples Clientes
+[ ] 66. Abrir tour.html en 2-3 pestañas diferentes
+[ ] 67. ✅ El contador de clientes debe aumentar
+[ ] 68. Controlar desde el panel admin
+[ ] 69. ✅ TODOS los clientes deben sincronizarse
+
+
+FASE 7: VERIFICACIÓN FINAL
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] 70. ✅ El servidor está funcionando en Railway
+[ ] 71. ✅ El panel admin está accesible
+[ ] 72. ✅ Los clientes se conectan correctamente
+[ ] 73. ✅ La sincronización funciona perfectamente
+[ ] 74. ✅ El contador de clientes se actualiza
+[ ] 75. ✅ Los controles (Play, Pause, Seek) funcionan
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+
+🎉 SI TODOS LOS PUNTOS ESTÁN MARCADOS: ¡FELICIDADES!
+═══════════════════════════════════════════════════════════════════════════════
+
+Tu sistema de sincronización de video VR está 100% funcional y desplegado.
+
+Puedes compartir estas URLs con tus usuarios:
+├── Panel Admin: https://tu-dominio.com/admin/admin.html
+└── Clientes: https://tu-dominio.com/tour.html
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+
+❌ SI ALGO NO FUNCIONA
+═══════════════════════════════════════════════════════════════════════════════
+
+Consulta estos archivos:
+├── INSTRUCCIONES_RAILWAY.md    → Guía detallada con soluciones
+├── LEEME_PRIMERO.txt           → Resumen rápido
+└── INSTRUCCIONES_FINALES_RAILWAY.md → Proceso completo
+
+
+Debugging:
+├── Logs de Railway: Deployments → Click en deployment
+├── Consola del navegador: F12
+└── Verificar URL en tour.html (línea 98)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+
+📝 NOTAS ADICIONALES
+═══════════════════════════════════════════════════════════════════════════════
+
+Mis URLs:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Servidor Railway:   https://________________________________.up.railway.app │
+│ Mi dominio Hostinger: https://________________________________________.com  │
+│ Panel Admin:        https://________________.com/admin/admin.html           │
+│ Clientes:           https://________________.com/tour.html                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Fecha de despliegue: ___ / ___ / ______
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+¡Buena suerte! 🚀
+

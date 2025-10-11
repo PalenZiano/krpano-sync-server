@@ -1,0 +1,189 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║                     🚀 SERVIDOR DE SINCRONIZACIÓN KRPANO                     ║
+║                              Listo para Railway.app                          ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+📁 CONTENIDO DE ESTA CARPETA
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ server.js                     → Servidor Node.js con Socket.IO
+✅ package.json                  → Dependencias del proyecto
+✅ .gitignore                    → Archivos a ignorar en Git
+✅ README.md                     → Documentación técnica
+✅ public/admin.html             → Panel de administración
+✅ INSTRUCCIONES_RAILWAY.md      → Guía completa paso a paso ⭐
+✅ LEEME_PRIMERO.txt             → Este archivo
+
+
+🎯 ¿QUÉ HACER AHORA?
+═══════════════════════════════════════════════════════════════════════════════
+
+PASO 1: Subir a GitHub
+└── Opción A: Usa GitHub Desktop (más fácil)
+    https://desktop.github.com/
+
+└── Opción B: Usa Git desde la terminal
+    git init
+    git add .
+    git commit -m "Initial commit"
+    git remote add origin https://github.com/TU-USUARIO/krpano-sync.git
+    git push -u origin main
+
+
+PASO 2: Desplegar en Railway
+└── 1. Ve a: https://railway.app/
+└── 2. Login con GitHub
+└── 3. New Project → Deploy from GitHub repo
+└── 4. Selecciona tu repositorio
+└── 5. Espera 2-3 minutos
+└── 6. Settings → Generate Domain
+└── 7. Copia tu URL: https://tu-proyecto.up.railway.app
+
+
+PASO 3: Configurar tour.html
+└── Abre tour.html (en tu proyecto Krpano)
+└── Busca línea 98 y cambia:
+    const SERVER_URL = 'https://tu-proyecto.up.railway.app';
+
+
+PASO 4: Subir a Hostinger
+└── Sube a public_html/:
+    - tour.html (modificado)
+    - krpano.xml
+    - krpano.js
+    - video/
+    - plugins/
+    - skin/
+
+└── Sube a public_html/admin/:
+    - admin.html (de la carpeta github/public/)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+
+📖 DOCUMENTACIÓN COMPLETA
+═══════════════════════════════════════════════════════════════════════════════
+
+👉 Lee el archivo: INSTRUCCIONES_RAILWAY.md
+
+Contiene:
+✅ Guía paso a paso con capturas
+✅ Solución de problemas
+✅ Comandos útiles
+✅ Verificación de funcionamiento
+✅ ¡Todo lo que necesitas saber!
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+
+⚡ INICIO RÁPIDO (SI YA SABES LO QUE HACES)
+═══════════════════════════════════════════════════════════════════════════════
+
+# Terminal:
+git init
+git add .
+git commit -m "Initial commit"
+gh repo create krpano-sync --public --source=. --push
+
+# Railway:
+1. https://railway.app/ → New Project → Deploy from GitHub
+2. Settings → Generate Domain
+3. Copiar URL
+
+# Actualizar tour.html:
+const SERVER_URL = 'https://[TU-URL].up.railway.app';
+
+# ¡Listo!
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+
+🎯 URLs FINALES
+═══════════════════════════════════════════════════════════════════════════════
+
+Después de completar todo:
+
+📡 Servidor:      https://tu-proyecto.up.railway.app
+🎛️  Panel Admin:  https://tu-dominio.com/admin/admin.html  
+👥 Clientes:      https://tu-dominio.com/tour.html
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+
+✅ VERIFICAR QUE TODO FUNCIONA
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Abre: https://tu-proyecto.up.railway.app
+   └── Deberías ver: "Servidor de Sincronización Krpano"
+
+2. Abre: https://tu-dominio.com/admin/admin.html
+   └── Indicador verde "Conectado"
+
+3. Abre: https://tu-dominio.com/tour.html
+   └── Indicador verde en esquina superior derecha
+
+4. Desde el panel admin, click en "Reproducir"
+   └── El video debe iniciar en los clientes
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+
+💰 COSTOS
+═══════════════════════════════════════════════════════════════════════════════
+
+Railway: $5 USD gratis al mes
+Consumo estimado: ~$1-3 USD/mes
+Para proyectos pequeños: SIEMPRE GRATIS
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+
+🆘 ¿PROBLEMAS?
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Los clientes no conectan (indicador rojo):
+   └── Verifica que la URL en tour.html sea correcta
+   └── Usa HTTPS (no HTTP)
+   └── Copia la URL exacta de Railway
+
+2. El servidor no despliega:
+   └── Revisa los logs en Railway (Deployments → último deployment)
+   └── Verifica que todos los archivos estén subidos a GitHub
+
+3. "This site can't be reached":
+   └── Genera el dominio en Railway (Settings → Generate Domain)
+   └── Espera 1-2 minutos después de generar
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+
+📚 ARCHIVOS DE AYUDA
+═══════════════════════════════════════════════════════════════════════════════
+
+INSTRUCCIONES_RAILWAY.md   → Guía paso a paso completa ⭐⭐⭐
+README.md                  → Documentación técnica
+LEEME_PRIMERO.txt          → Este archivo (resumen)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+
+¡TODO LISTO PARA DESPLEGAR!
+
+Estos archivos están optimizados para Railway y funcionarán automáticamente.
+No necesitas modificar nada en estos archivos, solo súbelos a GitHub.
+
+¡Buena suerte! 🎉
+
+═══════════════════════════════════════════════════════════════════════════════
+

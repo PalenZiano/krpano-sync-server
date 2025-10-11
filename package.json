@@ -1,0 +1,27 @@
+{
+  "name": "krpano-video-sync-server",
+  "version": "1.0.0",
+  "description": "Servidor de sincronización en tiempo real para videos VR de Krpano",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "krpano",
+    "video",
+    "sync",
+    "socketio",
+    "realtime",
+    "vr"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.5.4"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
+
