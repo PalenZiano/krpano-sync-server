@@ -655,19 +655,34 @@
             addLog(`Posición cambiada a ${formatTime(time)}`, 'success');
         }
         
+        function toggleVR() {
+            socket.emit('admin-toggle-vr');
+            addLog('🥽 Alternando modo VR en todos los clientes', 'info');
+            
+            // Actualizar estado del botón visualmente (puede no ser 100% preciso)
+            isVRActive = !isVRActive;
+            updateVRButton();
+        }
+        
+        function updateVRButton() {
+            const btn = document.getElementById('btnVR');
+            const txt = document.getElementById('vrText');
+            
+            if (isVRActive) {
+                btn.classList.add('active');
+                txt.textContent = 'Desactivar VR';
+            } else {
+                btn.classList.remove('active');
+                txt.textContent = 'Activar VR';
+            }
+        }
+        
         function goToPoster() {
             socket.emit('admin-go-poster');
             isPlaying = false;
             updatePlayPauseButton();
             updateVideoState('Vista Previa');
             addLog('Volviendo a vista previa', 'success');
-        }
-        
-        function toggleVR() {
-            socket.emit('admin-enter-vr');
-            isVRActive = !isVRActive;
-            document.getElementById('vrText').textContent = isVRActive ? 'Desactivar VR' : 'Activar VR';
-            addLog(isVRActive ? 'Modo VR activado' : 'Modo VR desactivado', 'success');
         }
         
         // UI Updates

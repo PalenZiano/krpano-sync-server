@@ -151,10 +151,10 @@ io.on('connection', (socket) => {
     console.log(`🏠 Volviendo a la escena inicial`);
   });
   
-  // Comando: Entrar en modo VR todos los clientes
-  socket.on('admin-enter-vr', () => {
-    io.emit('video-enter-vr');
-    console.log(`🥽 Activando modo VR en todos los clientes`);
+  // Comando: Activar modo VR
+  socket.on('admin-toggle-vr', () => {
+    io.emit('video-toggle-vr');
+    console.log(`🥽 Comando para alternar VR enviado a todos los clientes`);
   });
   
   // ============================================
