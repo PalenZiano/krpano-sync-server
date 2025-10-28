@@ -51,7 +51,8 @@ io.on('connection', (socket) => {
     sceneReady: false,
     synced: false,
     connectedAt: new Date().toISOString(),
-    ip: socket.handshake.address
+    ip: socket.handshake.address,
+    name: 'Usuario sin nombre'  // Por defecto
   };
   
   connectedClients.set(socket.id, clientInfo);
@@ -174,6 +175,17 @@ io.on('connection', (socket) => {
       client.sceneReady = data.sceneReady;
       connectedClients.set(socket.id, client);
       console.log(`📹 Cliente ${socket.id.substring(0,8)}... escena lista`);
+      broadcastClientList();
+    }
+  });
+  
+  // Cliente establece su nombre
+  socket.on('client-set-name', (data) => {
+    const client = connectedClients.get(socket.id);
+    if (client) {
+      client.name = data.name || 'Usuario sin nombre';
+      connectedClients.set(socket.id, client);
+      console.log(`👤 Cliente ${socket.id.substring(0,8)}... ahora es: ${client.name}`);
       broadcastClientList();
     }
   });
