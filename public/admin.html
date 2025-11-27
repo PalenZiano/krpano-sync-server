@@ -769,15 +769,20 @@
                 const connectedTime = new Date(client.connectedAt).toLocaleTimeString();
                 const displayName = client.name || shortId + '...';
                 
+                // Añadir badge de descarga SOLO si existe la propiedad
+                const downloadBadge = (typeof client.downloadPercent !== 'undefined') ? `
+                    <span class="badge ${client.downloadPercent >= 100 ? 'badge-success' : 'badge-warning'}">
+                        <span class="badge-icon"></span>
+                        ${client.downloadPercent >= 100 ? 'Video Listo' : `Descargando ${client.downloadPercent || 0}%`}
+                    </span>
+                ` : '';
+                
                 return `
                     <div class="client-item">
                         <div class="client-info">
                             <span class="client-name">👤 ${displayName}</span>
                             <div class="client-badges">
-                                <span class="badge ${client.downloadPercent >= 100 ? 'badge-success' : 'badge-warning'}">
-                                    <span class="badge-icon"></span>
-                                    ${client.downloadPercent >= 100 ? 'Video Listo' : `Descargando ${client.downloadPercent || 0}%`}
-                                </span>
+                                ${downloadBadge}
                                 <span class="badge ${client.synced ? 'badge-success' : 'badge-warning'}">
                                     <span class="badge-icon"></span>
                                     ${client.synced ? 'Sincronizado' : 'Conectando'}
