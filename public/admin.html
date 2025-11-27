@@ -331,11 +331,15 @@
         
         .client-item {
             background: linear-gradient(135deg, #fafafa 0%, #f9fafb 100%);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 14px;
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-bottom: 10px;
             border: 1px solid rgba(124, 58, 237, 0.1);
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
         }
         
         .client-item:hover {
@@ -345,30 +349,38 @@
             transform: translateX(4px);
         }
         
-        .client-header {
+        .client-info {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 14px;
+            gap: 12px;
+            flex: 1;
+            min-width: 0;
         }
         
-        .client-id {
+        .client-name {
             font-size: 14px;
             font-weight: 600;
-            color: #2d3748;
-            font-family: 'Monaco', 'Courier New', monospace;
+            color: #1a202c;
+            min-width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .client-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: nowrap;
+            flex-shrink: 0;
         }
         
         .client-time {
             font-size: 12px;
             color: #718096;
+            min-width: 65px;
+            text-align: right;
+            flex-shrink: 0;
             font-weight: 500;
-        }
-        
-        .client-badges {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
         }
         
         .badge {
@@ -542,13 +554,9 @@
                     <span>🔄</span>
                     <span>Reiniciar</span>
                 </button>
-                <button class="btn-warning" onclick="goToPoster()">
-                    <span>🏠</span>
-                    <span>Vista Previa</span>
-                </button>
-                <button id="btnVR" class="btn-purple" onclick="toggleVR()">
+                <button class="btn-purple" onclick="toggleVR()">
                     <span>🥽</span>
-                    <span id="vrText">Activar VR</span>
+                    <span>Alternar VR</span>
                 </button>
             </div>
             
@@ -562,21 +570,6 @@
                     <span>⏩</span>
                     <span>Ir a Posición</span>
                 </button>
-            </div>
-        </div>
-        
-        <div class="card" style="margin-bottom: 24px;">
-            <div class="card-title">
-                <span class="card-icon">📺</span>
-                Vista Previa del Video
-                <span style="margin-left: auto; font-size: 12px; color: #9ca3af; font-weight: 500;">Lo mismo que ven los clientes</span>
-            </div>
-            <div id="videoPreview" style="width: 100%; height: 400px; border-radius: 16px; overflow: hidden; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); position: relative; box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.3);">
-                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #a0aec0;">
-                    <div style="font-size: 56px; margin-bottom: 20px; opacity: 0.6;">📹</div>
-                    <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">Vista previa del video en tiempo real</div>
-                    <div style="font-size: 13px; opacity: 0.8;">Esta ventana muestra lo mismo que ven los clientes</div>
-                </div>
             </div>
         </div>
         
@@ -595,10 +588,15 @@
             </div>
             
             <div class="card">
-                <div class="card-title">
-                    <span class="card-icon">👥</span>
-                    Clientes Conectados
-                    <span style="margin-left: auto; background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%); color: white; padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 700; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);" id="clientBadge">0</span>
+                <div class="card-title" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <span class="card-icon">👥</span>
+                        Clientes Conectados
+                        <span style="background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%); color: white; padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 700; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);" id="clientBadge">0</span>
+                    </div>
+                    <button onclick="refreshClientList()" class="btn-secondary" style="padding: 8px 20px; font-size: 13px; display: flex; align-items: center; gap: 8px;">
+                        🔄 Actualizar
+                    </button>
                 </div>
                 
                 <div class="clients-container" id="clientsList">
@@ -631,7 +629,6 @@
         const socket = io(SERVER_URL);
         let currentTime = 0;
         let isPlaying = false;
-        let isVRActive = false;
         let connectedClients = [];
         
         // Conexión
@@ -646,11 +643,17 @@
         });
         
         socket.on('clients-list', function(data) {
-            connectedClients = data.clients || [];
-            document.getElementById('clientCount').textContent = data.count;
-            document.getElementById('clientBadge').textContent = data.count;
+            // Filtrar clientes que no tienen nombre (paneles admin)
+            const allClients = data.clients || [];
+            connectedClients = allClients.filter(client => {
+                return client.name && client.name !== 'Usuario sin nombre';
+            });
+            
+            const clientCount = connectedClients.length;
+            document.getElementById('clientCount').textContent = clientCount;
+            document.getElementById('clientBadge').textContent = clientCount;
             updateClientsList();
-            addLog(`Actualización: ${data.count} cliente(s) conectado(s)`, 'info');
+            addLog(`Actualización: ${clientCount} cliente(s) conectado(s)`, 'info');
         });
         
         // Toggle Play/Pause
@@ -699,35 +702,12 @@
             addLog(`Posición cambiada a ${formatTime(time)}`, 'success');
         }
         
+        // Alternar modo VR en todos los clientes
         function toggleVR() {
             socket.emit('admin-toggle-vr');
             addLog('🥽 Alternando modo VR en todos los clientes', 'info');
-            
-            // Actualizar estado del botón visualmente (puede no ser 100% preciso)
-            isVRActive = !isVRActive;
-            updateVRButton();
         }
-        
-        function updateVRButton() {
-            const btn = document.getElementById('btnVR');
-            const txt = document.getElementById('vrText');
-            
-            if (isVRActive) {
-                btn.classList.add('active');
-                txt.textContent = 'Desactivar VR';
-            } else {
-                btn.classList.remove('active');
-                txt.textContent = 'Activar VR';
-            }
-        }
-        
-        function goToPoster() {
-            socket.emit('admin-go-poster');
-            isPlaying = false;
-            updatePlayPauseButton();
-            updateVideoState('Vista Previa');
-            addLog('Volviendo a vista previa', 'success');
-        }
+
         
         // UI Updates
         function updatePlayPauseButton() {
@@ -779,30 +759,55 @@
                 return;
             }
             
-            container.innerHTML = connectedClients.map(client => {
+            // Ordenar clientes: más recientes primero
+            const sortedClients = [...connectedClients].sort((a, b) => {
+                return new Date(b.connectedAt) - new Date(a.connectedAt);
+            });
+            
+            container.innerHTML = sortedClients.map(client => {
                 const shortId = client.id.substring(0, 8);
                 const connectedTime = new Date(client.connectedAt).toLocaleTimeString();
                 const displayName = client.name || shortId + '...';
                 
                 return `
                     <div class="client-item">
-                        <div class="client-header">
-                            <span class="client-id" style="font-weight: 600;">👤 ${displayName}</span>
-                            <span class="client-time">${connectedTime}</span>
+                        <div class="client-info">
+                            <span class="client-name">👤 ${displayName}</span>
+                            <div class="client-badges">
+                                <span class="badge ${client.downloadPercent >= 100 ? 'badge-success' : 'badge-warning'}">
+                                    <span class="badge-icon"></span>
+                                    ${client.downloadPercent >= 100 ? 'Video Listo' : `Descargando ${client.downloadPercent || 0}%`}
+                                </span>
+                                <span class="badge ${client.synced ? 'badge-success' : 'badge-warning'}">
+                                    <span class="badge-icon"></span>
+                                    ${client.synced ? 'Sincronizado' : 'Conectando'}
+                                </span>
+                                <span class="badge ${client.sceneReady ? 'badge-success' : 'badge-warning'}">
+                                    <span class="badge-icon"></span>
+                                    ${client.sceneReady ? 'Escena Lista' : 'Cargando'}
+                                </span>
+                            </div>
                         </div>
-                        <div class="client-badges">
-                            <span class="badge ${client.synced ? 'badge-success' : 'badge-warning'}">
-                                <span class="badge-icon"></span>
-                                ${client.synced ? 'Sincronizado' : 'Conectando'}
-                            </span>
-                            <span class="badge ${client.sceneReady ? 'badge-success' : 'badge-warning'}">
-                                <span class="badge-icon"></span>
-                                ${client.sceneReady ? 'Escena Lista' : 'Cargando'}
-                            </span>
-                        </div>
+                        <span class="client-time">${connectedTime}</span>
                     </div>
                 `;
             }).join('');
+        }
+        
+        function refreshClientList() {
+            addLog('Actualizando lista de clientes...', 'info');
+            // La lista se actualiza automáticamente cuando el servidor envía 'clients-list'
+            // Esta función sirve como feedback visual
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳ Actualizando...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                addLog('Lista actualizada', 'success');
+            }, 1000);
         }
         
         function addLog(message, type = 'info') {
@@ -844,27 +849,6 @@
                 document.getElementById('seekValue').textContent = formatTime(currentTime);
             }
         }, 100);
-        
-        // Load video preview (embedded tour.html)
-        function loadVideoPreview() {
-            // Obtener la URL base (reemplazar /admin.html con /tour.html)
-            const baseURL = window.location.origin;
-            // Construir URL del tour - ajusta según tu configuración
-            const tourURL = 'https://ar.elcoscorito.es/tour.html'; // CAMBIA ESTO por tu dominio
-            
-            const videoPreview = document.getElementById('videoPreview');
-            videoPreview.innerHTML = `
-                <iframe 
-                    src="${tourURL}" 
-                    style="width: 100%; height: 100%; border: none; border-radius: 12px;"
-                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; xr-spatial-tracking"
-                    allowfullscreen
-                ></iframe>
-            `;
-        }
-        
-        // Cargar vista previa después de un momento
-        setTimeout(loadVideoPreview, 2000);
     </script>
 </body>
 </html>

@@ -52,7 +52,8 @@ io.on('connection', (socket) => {
     synced: false,
     connectedAt: new Date().toISOString(),
     ip: socket.handshake.address,
-    name: 'Usuario sin nombre'  // Por defecto
+    name: 'Usuario sin nombre',  // Por defecto
+    downloadPercent: 0 // Progreso de descarga
   };
   
   connectedClients.set(socket.id, clientInfo);
@@ -186,6 +187,30 @@ io.on('connection', (socket) => {
       client.name = data.name || 'Usuario sin nombre';
       connectedClients.set(socket.id, client);
       console.log(`👤 Cliente ${socket.id.substring(0,8)}... ahora es: ${client.name}`);
+      broadcastClientList();
+    }
+  });
+
+  // Cliente reporta progreso de descarga
+  socket.on('client-download-progress', (data) => {
+    const client = connectedClients.get(socket.id);
+    if (client) {
+      client.downloadPercent = data.percent;
+      connectedClients.set(socket.id, client);
+      // Solo hacemos broadcast cada 10% para no saturar, o si es 100%
+      if (data.percent % 10 === 0 || data.percent >= 100) {
+        broadcastClientList();
+      }
+    }
+  });
+
+  // Cliente reporta descarga completa
+  socket.on('client-download-complete', (data) => {
+    const client = connectedClients.get(socket.id);
+    if (client) {
+      client.downloadPercent = 100;
+      connectedClients.set(socket.id, client);
+      console.log(`📥 Cliente ${socket.id.substring(0,8)}... descarga completa`);
       broadcastClientList();
     }
   });
