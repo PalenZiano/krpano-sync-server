@@ -535,7 +535,7 @@
             
             <div class="status-card">
                 <div class="status-label">Estado del Video</div>
-                <div class="status-value" id="videoState">Detenido</div>
+                <div class="status-value" id="videoState">Pausado en 0:00</div>
             </div>
         </div>
         
@@ -554,9 +554,9 @@
                     <span>🔄</span>
                     <span>Reiniciar</span>
                 </button>
-                <button class="btn-purple" onclick="toggleVR()">
-                    <span>🥽</span>
-                    <span>Alternar VR</span>
+                <button class="btn-purple" onclick="goToPoster()">
+                    <span>🏠</span>
+                    <span>Vista Inicial</span>
                 </button>
             </div>
             
@@ -702,12 +702,17 @@
             addLog(`Posición cambiada a ${formatTime(time)}`, 'success');
         }
         
-        // Alternar modo VR en todos los clientes
-        function toggleVR() {
-            socket.emit('admin-toggle-vr');
-            addLog('🥽 Alternando modo VR en todos los clientes', 'info');
+        // Volver a la vista inicial (pueblo_AVL.jpg)
+        function goToPoster() {
+            socket.emit('admin-go-poster');
+            currentTime = 0;
+            document.getElementById('seekBar').value = 0;
+            document.getElementById('seekValue').textContent = '0:00';
+            isPlaying = false;
+            updatePlayPauseButton();
+            updateVideoState('Vista Inicial');
+            addLog('🏠 Volviendo a la vista inicial (pueblo_AVL.jpg)', 'success');
         }
-
         
         // UI Updates
         function updatePlayPauseButton() {

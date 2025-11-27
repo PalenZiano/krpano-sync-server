@@ -20,7 +20,7 @@ let videoState = {
   playing: false,
   time: 0,
   timestamp: Date.now(),
-  scene: 'posterscene'  // Escena actual
+  scene: 'videopano'  // Escena actual (inicia en video pausado)
 };
 
 // Información detallada de clientes conectados
